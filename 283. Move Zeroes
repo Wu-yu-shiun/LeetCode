@@ -1,0 +1,20 @@
+//C language
+
+void moveZeroes(int* nums, int numsSize){    
+    int i=0,j=-1; //i讀取，j寫入
+    while(i<numsSize){  //讀取端持續前衝直到讀到最後
+        if(nums[i]!=0){  //若讀取到不為0，寫入端向前一步，讀取端寫入端交換數字
+            j++;
+            //swap
+            int temp=nums[j];
+            nums[j]=nums[i];
+            nums[i]=temp;
+        }
+        i++;
+    }
+}
+
+//注意：
+//i,j初始值，i++,j++放的位置
+//當讀到0時，i,j距離拉大一格
+//當前方都數字且讀到不為0時，剛好跟自己swap(i,j同值)
