@@ -1,0 +1,21 @@
+//C language
+
+//因讀取端必大於寫入端，直接覆寫在原本的字元陣列上，減少空間複雜度
+char* rewrite(char* input){
+    char* output=input; //把位址直接複製一份
+    int w=0,r=0; 
+    for(;r<strlen(input);++r){
+        if(input[r]=='#'){
+            if(w>0) w--;
+        }else{
+            output[w]=input[r];
+            w++;
+        }
+    }
+    output[w]='\0';
+    return output;
+}
+
+bool backspaceCompare(char * s, char * t){
+    return strcmp(rewrite(s),rewrite(t))==0; 
+}
