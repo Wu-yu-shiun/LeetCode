@@ -1,0 +1,27 @@
+//C language
+
+int minSubArrayLen(int target, int* nums, int numsSize){
+    //兩指標:start,end控制子陣列大小
+    int start=0,end=0,sum=nums[0],minLength=INT_MAX;
+    
+    while(true){
+        //若未達到目標繼續加(start指標固定，end指標往前)
+        if(sum<target){
+            end++;
+            if(end==numsSize) break; //當end指摽找不到下一個值時跳出
+            sum+=nums[end];
+            continue;
+        }
+        //達標後檢視長度
+        int length=end-start+1; 
+        if(length<minLength){
+            minLength=length;
+        }
+        //嘗試將start指標往前推
+        sum-=nums[start];
+        start++; 
+    }
+    
+    if(minLength==INT_MAX) return 0;
+    else return minLength;
+}
