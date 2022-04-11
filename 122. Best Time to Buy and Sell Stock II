@@ -1,2 +1,21 @@
 //C language
 
+int maxProfit(int* prices, int pricesSize){
+
+    int profitRecord[pricesSize];
+    profitRecord[0]=0;  //初使值 (只有一天沒獲利)
+    
+    for(int day=1;day<pricesSize;++day){ //從第二天推往最後一天
+        int temp;
+        //case1:最後一天不賣
+        profitRecord[day]=profitRecord[day-1];//原本的遞迴函式=>陣列中的值
+        //case2:最後一天賣
+        for(int i=0;i<day;i++){ 
+            temp=profitRecord[i]+(prices[day]-prices[i]);//原本的遞迴函式=>陣列中的值
+            if(temp>profitRecord[day])
+                profitRecord[day]=temp;
+        }
+    }
+    
+    return profitRecord[pricesSize-1];
+}
