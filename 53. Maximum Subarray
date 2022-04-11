@@ -1,0 +1,12 @@
+//C language
+
+int maxSubArray(int* nums, int numsSize){
+    int current=nums[0]; //不為負便一直向前取新的，一但為負則前面通通不要(歸0)
+    int max=nums[0];  //負責記錄最大的模樣
+    for(int i=1;i<numsSize;++i){
+        if(current<0) current=0; //若目前子數列和為負，直接都不取
+        current+=nums[i]; //向後多取一位
+        if(current>max) max=current;  //若和比歷史最大還大則覆蓋      
+    }
+    return max;
+}
