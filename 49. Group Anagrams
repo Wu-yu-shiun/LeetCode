@@ -1,0 +1,71 @@
+//C language
+
+// Return an array of arrays of size *returnSize.
+// The sizes of the arrays are returned as *returnColumnSizes array.
+// Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
+
+typedef struct{
+    char *original;
+    char *sorted;
+}Pair;
+
+int compareChar(const void *a,const void *b){
+    return *(const char*)a-*(const char*)b;
+}
+
+int comparePair(const void *a,const void *b){
+    const Pair *pa=(const Pair*)a;
+    const Pair *pb=(const Pair*)b;
+    return strcmp( pa->sorted , pb->sorted ); 
+}
+
+char *** groupAnagrams(char ** strs, int strsSize, int* returnSize, int** returnColumnSizes){
+    
+    //1.先做出pairs(字串排序前後比較表)-----------------------------------
+    
+    Pair* pairs=(Pair*)malloc(sizeof(Pair)*strsSize);
+    
+    //每個字串一一複製一份，依照字元大小做排序，存進pairs
+    for(int i=0;i<strsSize;++i){
+        char *sortedString=(char*)malloc(sizeof(char)*strlen(strs[i])+1); //strlen:計算字串長度+1(/n)
+        strcpy(sortedString,strs[i]);
+        
+        qsort(sortedString,strlen(strs[i]),sizeof(char),compareChar);
+        
+        pairs[i].original=strs[i];
+        pairs[i].sorted=sortedString;
+    }
+    
+    //將pairs內每組Pair，依照...做排序(題目不在乎出現先後順序，同組匡在一個群組即可)
+    qsort(pairs,strsSize,sizeof(Pair),comparePair);    
+    
+    //2.用剛剛整理好的pairs資訊開始填入結果-----------------------------------
+    
+    char ***result=NULL;  //ex:[[...],[...,...],[...]]
+    *returnSize=0; //ex: 3
+    *returnColumnSizes=NULL;  //ex:[1,2,1]
+
+    //case1:新增一新群組(第一筆/sort後的字串跟前一筆不一樣)  ex:[1,2,1]=>[1,2,1,1]
+    //case2:新增到在其中一現有群組的尾巴(sort後字串出現過)   ex:[1,2,1]=>[1,2,2]
+    for(int i=0;i<strsSize;++i){
+        if( i==0 || strcmp( pairs[i].sorted,pairs[i-1].sorted )!=0 ){ //case1
+            //調整資料格式
+            (*returnSize)++;
+            *returnColumnSizes=(int*)realloc(*returnColumnSizes,sizeof(int)*(*returnSize));
+            (*returnColumnSizes)[(*returnSize)-1]=1;
+            //放入
+            result=(char***)realloc(result,sizeof(char**)*(*returnSize));
+            result[(*returnSize)-1]=(char**)malloc(sizeof(char*));
+            result[(*returnSize)-1][0]=pairs[i].original;          
+        }
+        else{  //case2
+            //調整資料格式
+            (*returnColumnSizes)[(*returnSize)-1]++;
+            //放入
+            int lastGroupSize=(*returnColumnSizes)[(*returnSize)-1];
+            result[(*returnSize)-1]=(char**)realloc(result[(*returnSize)-1],sizeof(char*)*(lastGroupSize));
+            result[(*returnSize)-1][lastGroupSize-1]=pairs[i].original;
+        }     
+    }
+    return result;
+}
