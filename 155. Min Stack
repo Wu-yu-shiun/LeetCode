@@ -1,0 +1,45 @@
+//C language
+
+//Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+typedef struct {
+    int* data;
+    int* min;
+    int size;
+} MinStack;
+
+MinStack* minStackCreate() {
+    MinStack* stack=(MinStack*)malloc(sizeof(MinStack));
+    stack->data=NULL;
+    stack->min=NULL;
+    stack->size=0;
+    return stack;
+}
+
+void minStackPush(MinStack* obj, int val) {
+    obj->size++;
+    obj->data=(int*)realloc(obj->data,sizeof(int)*obj->size);
+    obj->min=(int*)realloc(obj->min,sizeof(int)*obj->size);
+    obj->data[obj->size-1]=val;
+    if(obj->size==1||val<obj->min[obj->size-2]) obj->min[obj->size-1]=val;
+    else obj->min[obj->size-1]=obj->min[obj->size-2];
+}
+    
+
+void minStackPop(MinStack* obj) {
+    obj->size--;
+}
+
+int minStackTop(MinStack* obj) {
+    return obj->data[obj->size-1];
+}
+
+int minStackGetMin(MinStack* obj) {
+    return obj->min[obj->size-1];
+}
+
+void minStackFree(MinStack* obj) {
+    free(obj->data);
+    free(obj->min);
+    free(obj);
+}
