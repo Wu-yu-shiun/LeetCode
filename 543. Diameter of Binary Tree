@@ -1,0 +1,31 @@
+//C language
+
+// Definition for a binary tree node.
+// struct TreeNode {
+//     int val;
+//     struct TreeNode *left;
+//     struct TreeNode *right;
+// };
+
+int max(int a,int b){
+    if(a>=b) return a;
+    else return b;
+}
+
+int maxDepth(struct TreeNode* root){
+    if (root==NULL) return 0; //遞迴邊界條件(當找到樹葉的下一個時)
+    return max(maxDepth(root->right),maxDepth(root->left))+1; //樹高=max(左子樹,右子樹)+1
+}
+
+
+//找到二元樹的最長路徑
+int diameterOfBinaryTree(struct TreeNode* root){
+    if (root==NULL) return 0; //遞迴邊界條件(當找到樹葉的下一個時)
+    
+    int mid,left,right;
+    mid=maxDepth(root->left)+maxDepth(root->right); //路徑通過最上面的根
+    left=diameterOfBinaryTree(root->left);          //路徑只通過根的右邊子樹
+    right=diameterOfBinaryTree(root->right);        //路徑只通過根的左邊子樹
+    
+    return max(max(left,right),mid);
+}
