@@ -1,0 +1,24 @@
+//C language
+
+//2D dynamic programming
+
+int max(int a,int b){
+    if(a>=b) return a;
+    else return b;
+}
+
+int min(int a,int b){
+    if(a<=b) return a;
+    else return b;
+}
+
+int maxProfit(int* prices, int pricesSize){                            
+    int buy1=INT_MAX,buy2=INT_MAX,profit1=0,profit2=0;
+    for(int i=0;i<pricesSize;++i){
+        buy1=min(prices[i],buy1);             // 找第一次買入最低價
+        profit1=max(prices[i]-buy1,profit1);  // 做一次買賣時的最大獲利
+        buy2=min(prices[i]-profit1,buy2);     // 找第二次買入最低價(此時第二次買入價取想成當天價扣掉第一次獲利，可能為負)
+        profit2=max(prices[i]-buy2,profit2);  // 做兩次買賣時的最大獲利
+    }
+    return profit2;
+}
