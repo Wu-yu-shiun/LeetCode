@@ -3,7 +3,7 @@
 int* productExceptSelf(int* nums, int numsSize, int* returnSize){
     
     *returnSize=numsSize; //C language must know size when returning array
-    int* result=(int*)malloc(sizeof(int)*numsSize); //use malloc because its an int* function 
+    int* result=(int*)malloc(sizeof(int)*numsSize); //use malloc because of int* function 
     
     int left[numsSize],right[numsSize];
     left[0]=1; 
