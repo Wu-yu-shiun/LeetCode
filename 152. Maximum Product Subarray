@@ -1,0 +1,34 @@
+//C language
+
+int max(int a,int b){
+    if(a>=b) return a;
+    else return b;
+}
+
+int min(int a,int b){
+    if(a<=b) return a;
+    else return b;
+}
+
+int maxProduct(int* nums, int numsSize){      
+    if(numsSize==0) return 0;
+    
+    int result=nums[0];
+    int maxPos=nums[0],maxNeg=nums[0];  //同時保留當下正負方向的最大值(當下負最多下一輪可能變正最多)
+    
+    for(int i=1;i<numsSize;++i){        //ex: nums = [ 2,  -3, -2,  -5,   10,    -5,      4 ]
+        
+        //取得連乘積的最大最小值
+        int tempMax=max(nums[i]*maxPos,nums[i]*maxNeg);  // -6, 12,  10,  100,   500,   2000
+        int tempMin=min(nums[i]*maxPos,nums[i]*maxNeg);  // -6,  6, -60, -600, -3000, -12000
+
+        //取捨要用連乘積還是新開頭
+        maxPos=max(nums[i],tempMax);                     // -3, 12,  10,  100,   500,   2000
+        maxNeg=min(nums[i],tempMin);                     // -6, -2, -60, -600, -3000, -12000
+
+        //刷新當下最佳解
+        result=max(result,maxPos);                       //  2, 12,  12,  100,   500,   2000
+    }
+    
+    return result;
+}
