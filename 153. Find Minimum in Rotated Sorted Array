@@ -1,0 +1,14 @@
+//C language
+
+int findMin(int* nums, int numsSize){
+    int start=0,end=numsSize-1,mid;
+    while(start<end){
+        mid=(start+end)/2;
+        if(nums[mid]>nums[end]){     //min at right 
+            start=mid+1;
+        }else{                       //min at left or middle
+            end=mid;
+        }
+    }
+    return nums[start];   //此時 start == end != mid (mid要再進下一次迴圈才下相同)
+}
