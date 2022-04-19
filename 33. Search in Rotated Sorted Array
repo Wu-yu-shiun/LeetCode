@@ -1,0 +1,36 @@
+//C language
+
+//sorted array的index轉成題目的index
+int unsortedIndex(int index,int numsSize,int offset){ 
+    return (index+offset)%numsSize;
+}
+
+int search(int* nums, int numsSize, int target){
+    int start=0,end=numsSize-1,mid;
+    while(start<end){     
+        mid=(start+end)/2;
+        if(nums[mid]>nums[end]){     //min at right 
+            start=mid+1;
+        }else{                       //min at left or middle
+            end=mid;
+        }
+    }
+    
+    int offset=end,midTrueIndex; //end代表最小值index，也代表離正常sorted array偏差值
+    start=0; end=numsSize-1;
+    while(start<=end){
+        mid=(start+end)/2;
+        midTrueIndex=unsortedIndex(mid,numsSize,offset);
+        if(target==nums[midTrueIndex]){  
+            return midTrueIndex;
+        }
+        else if(target>nums[midTrueIndex]){ //target at right
+            start=mid+1;
+        }        
+        else{     //target at left                 
+            end=mid-1;
+        }
+    }
+    
+    return -1;
+}
