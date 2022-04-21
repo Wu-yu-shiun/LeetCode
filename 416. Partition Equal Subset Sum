@@ -39,3 +39,46 @@ bool canPartition(int* nums, int numsSize){
 // i=3  [T] (F) (T) (F)  T   F   T   F   T   F   T  
 // i=4  [T] (F) (T) (F) (T)  T   T   T   T   T   T  
 // i=5  [T] (F) (T)  T   T   T   T   T   T   T   T 
+
+----------------------------------------------------------------------------------------
+//optimize to 1D dynamic programming
+
+bool canPartition(int* nums, int numsSize){
+    //find target
+    int sum=0,target;
+    for(int i=0;i<numsSize;++i){
+        sum+=nums[i];
+    }
+    if(sum%2!=0) return false;  
+    target=sum/2;
+    //DP (i=>number of element we can use, j=>target)
+    bool dp[target+1];
+    for(int i=0;i<target+1;++i){  //initialize
+        dp[i]=(i==0)?true:false;
+    }
+    for(int i=0;i<numsSize;++i){   //fill form
+        for(int j=target;j>=nums[i];--j){
+            dp[j]=dp[j]||dp[j-nums[i]];
+        }   
+    }
+    return dp[target];   
+}
+
+//ex:nums=[2,6,4,5,3] =>target=10
+
+//         init  i=0   i=1   i=2   i=3   i=4 
+//dp[10]    F     F     F     T     T     T
+//dp[9]     F     F     F     F     T     T
+//dp[8]     F     F     T     T     T     T
+//dp[7]     F     F     F     F     T     T
+//dp[6]     F     F     T     T     T     T
+//dp[5]     F     F           F     T     T
+//dp[4]     F     F           T           T
+//dp[3]     F     F                       T
+//dp[2]     F     T 
+//dp[1]     F
+//dp[0]     F
+
+
+
+
