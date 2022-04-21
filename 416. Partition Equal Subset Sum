@@ -1,0 +1,41 @@
+//C language
+
+// 0/1 Knapsack problem => dynamic programming
+
+bool canPartition(int* nums, int numsSize){
+
+    //先求出subarray的目標和(target)，轉成背包問題
+    int sum=0,target;
+    for(int i=0;i<numsSize;++i){
+        sum+=nums[i];
+    }
+    if(sum%2!=0) return false;  //若全陣列和為奇數，不可能有辦法瓜分兩半
+    target=sum/2;
+    
+    //dp:當目標和為j時(j=0~target)，陣列中有i個element可以選(i=0~numsSize)是否有解?逐一填表紀錄
+    bool dp[numsSize+1][target+1]; 
+    for(int i=0;i<numsSize+1;++i){
+        for(int j=0;j<target+1;++j){
+        
+            //初始化(dp base)
+            if(j==0) dp[i][j]=true;       //當目標和為0，多大的陣列都有解(都不要選即可)
+            else if(i==0) dp[i][j]=false; //當只有0個element可以選，只要目標和大於0都無解
+            
+            //填表
+            //case1:若目標和小於新加入的element，那只能採用沒加入新element前的答案
+            //case2:其他有機會從無解變有解(那代表新element一定有用到)，試圖找到用完此element時的之前解
+            else dp[i][j]=(j<nums[i-1])?dp[i-1][j]:(dp[i-1][j]||dp[i-1][j-nums[i-1]]);       
+        }
+    }
+    return dp[numsSize][target];   
+}
+
+//ex:nums=[2,3,4,5,6] =>target=10  []表示初始化的表格 ,()表示直接進沒選到
+
+//      j=0 j=1 j=2 j=3 j=4 j=5 j=6 j=7 j=8 j=9 j=10
+// i=0  [T] [F] [F] [F] [F] [F] [F] [F] [F] [F] [F]   
+// i=1  [T] (F)  T   F   F   F   F   F   F   F   F
+// i=2  [T] (F) (T) (F) (F) (F)  T   F   T   F   F   
+// i=3  [T] (F) (T) (F)  T   F   T   F   T   F   T  
+// i=4  [T] (F) (T) (F) (T)  T   T   T   T   T   T  
+// i=5  [T] (F) (T)  T   T   T   T   T   T   T   T 
