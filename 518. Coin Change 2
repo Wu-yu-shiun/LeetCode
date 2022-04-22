@@ -1,0 +1,19 @@
+//C language
+
+//dp:discuss every amount from 0 to input amount
+
+int change(int amount, int* coins, int coinsSize){
+    int dp[amount+1]; //store different amount and update according to more and more element
+    //initialize
+    memset(dp,0,sizeof(int)*(amount+1));
+    dp[0]=1;
+    for(int i=1;i<coinsSize+1;++i){  //element we can use in array
+        for(int j=0;j<amount+1;++j){ //amount we want to reach
+            //新開放的必用不到，繼續沿用沒開放前的結果
+            if(coins[i-1]>j) continue;
+            //option1:沒用到新開放的element + option2:用到新開放的element
+            dp[j]+=dp[j-coins[i-1]];
+        }
+    }
+    return dp[amount];   
+}
