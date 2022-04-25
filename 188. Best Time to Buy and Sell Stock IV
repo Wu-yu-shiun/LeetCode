@@ -1,0 +1,35 @@
+//C language
+
+//此解法不用管在何時賣出買入！因為獲利會直接併入下次買入價，隨著天數增加直接更新容許1～k次交易的獲利情況
+
+//動態規劃：依序紀錄容許1~K筆交易的買入價(成本)和獲利，並隨開放的天數增加而更新
+//用到之前的記錄之處 => 成本：1.需要拿之前的最低買入價跟新開放到的買入價做比較，取最低
+//                => 獲利：1.需要拿之前的最高利潤跟新開放到的賣出價做比較，取最高
+//                        2.上次交易完的最佳利潤會併入新一筆交易的買入價
+int max(int a,int b){
+    if(a>=b) return a;
+    else return b;
+}
+
+int min(int a,int b){
+    if(a<=b) return a;
+    else return b;
+}
+
+int maxProfit(int k, int* prices, int pricesSize){
+    int cost[k+1];   //cost[1]~cost[k]隨開放的天數增加而更新k種最低買入價, cost[0]用不到
+    int profit[k+1];//profit[1]~profit[k+1]隨開放的天數增加而更新k種最高獲利, profit[0]=0
+    //初始條件
+    for(int i=0;i<k+1;++i){
+        cost[i]=INT_MAX;
+        profit[i]=0;
+    }
+    //dp: i=>開放到第i天的交易, j=>容許j筆交易的獲利
+    for(int i=0;i<pricesSize;++i){
+        for(int j=1;j<=k;++j){
+            cost[j]=min(prices[i]-profit[j-1],cost[j]); //將上次前一天紀錄的最高獲利併入買入價
+            profit[j]=max(prices[i]-cost[j],profit[j]);
+        }
+    }
+    return profit[k];  
+}
