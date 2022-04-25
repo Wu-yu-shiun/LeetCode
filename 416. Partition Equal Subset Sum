@@ -1,6 +1,9 @@
 //C language
 
-// 0/1 Knapsack problem => dynamic programming
+// 0/1 Knapsack problem => dynamic programming:記錄不同target的情況，隨著開放的陣列元素一路增加即時更新
+
+//關聯性：新的答案會 1.若開放新元素前就是true了，直接沿用前一個答案true，等於有沒有取用到新元素都沒差
+//                2.若開放新元素前是false，想要變成true的話一定會用到新元素，向前找"target扣掉新元素"的紀錄是否為true
 
 bool canPartition(int* nums, int numsSize){
 
