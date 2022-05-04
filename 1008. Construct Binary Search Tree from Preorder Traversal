@@ -1,0 +1,75 @@
+//C language
+
+//Definition for a binary tree node.
+//struct TreeNode {
+//    int val;
+//    struct TreeNode *left;
+//    struct TreeNode *right;
+// };
+
+
+//sol1: for loop
+struct TreeNode* bstFromPreorder(int* preorder, int preorderSize){
+    
+    //init root
+    struct TreeNode* root=(struct TreeNode*)malloc(sizeof(struct TreeNode));
+    root->val=preorder[0];
+    root->left=root->right=NULL;
+    
+    //record
+    struct TreeNode* parents[100]; //use as a stack to record all possible parent
+    int current=0; //use a index to get current parent
+    parents[0]=root;
+    
+    //traverse all nodes
+    for(int i=1;i<preorderSize;++i){
+        
+        //init nodes
+        struct TreeNode* node=(struct TreeNode*)malloc(sizeof(struct TreeNode));
+        node->val=preorder[i];
+        node->left=node->right=NULL;
+        
+        //find node's location
+        if(preorder[i]<parents[current]->val){  //on the left
+            parents[current]->left=node;
+            parents[++current]=node; //record new possible parent
+        }
+        else{  //on the right
+            while(current>0 && preorder[i]>parents[current-1]->val){ //find right parent
+                current--;
+            }
+            parents[current]->right=node;
+            parents[current]=node; //record new possible parent
+        }
+    }
+    return root;
+}
+
+//-----------------------------------------------------------------------------------
+
+//sol2: for recursion
+
+int i;  //use global variable to get index when traversing all array element 
+        //YOU CAN NOT ASSIGN VALUR TO GLOBAL VARIABLE AT THIS PLACE !!!
+
+struct TreeNode* dfs(int* preorder, int preorderSize, int bound){
+    if(i==preorderSize || preorder[i]>bound) return NULL;
+    else{
+        struct TreeNode* node=(struct TreeNode*)malloc(sizeof(struct TreeNode));
+        node->val=preorder[i++];
+        node->left=dfs(preorder,preorderSize,node->val);
+        node->right=dfs(preorder,preorderSize,bound);
+        return node;
+    }  
+}
+
+struct TreeNode* bstFromPreorder(int* preorder, int preorderSize){
+    i=0;
+    return dfs(preorder,preorderSize,INT_MAX);
+}
+
+
+
+
+
+
