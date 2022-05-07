@@ -11,7 +11,7 @@ const longestConsecutive = (nums) => {
             let right=(nums[i]+1 in hash)?hash[nums[i]+1]:0; 
             let len=left+right+1;
             
-            //只需更新最左界和最右界的值，因為被框成一串後，其他新加進來的元素頂多碰到左右兩界
+            //只需更新最左界和最右界的值，因為被框成一串後，其他新加進來的元素頂多碰到左右兩界，hash[nums[i]]給多少都可以，只是要登記進hashmap
             hash[nums[i]]=hash[nums[i]-left]=hash[nums[i]+right]=len;
             
             if(len>result) result=len;
