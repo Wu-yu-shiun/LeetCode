@@ -1,0 +1,68 @@
+//C language
+
+typedef struct {
+    int* key;
+    int* value;
+    int size;
+} MyHashMap;
+
+
+MyHashMap* myHashMapCreate() {
+    MyHashMap* hash=(MyHashMap*)malloc(sizeof(MyHashMap));
+    hash->key=NULL;
+    hash->value=NULL;
+    hash->size=0;
+    return hash;
+}
+
+void myHashMapPut(MyHashMap* obj, int key, int value) {
+    for(int i=0;i<obj->size;++i){
+        if(obj->key[i]==key){
+            obj->value[i]=value;
+            return;
+        }
+    }
+    obj->size++;
+    obj->key=(int*)realloc(obj->key,sizeof(int)*obj->size);
+    obj->value=(int*)realloc(obj->value,sizeof(int)*obj->size);
+    obj->key[obj->size-1]=key;
+    obj->value[obj->size-1]=value;
+}
+
+int myHashMapGet(MyHashMap* obj, int key) {
+    for(int i=0;i<obj->size;++i){
+        if(obj->key[i]==key) return obj->value[i];
+    }
+    return -1;
+}
+
+void myHashMapRemove(MyHashMap* obj, int key) {
+    for(int i=0;i<obj->size;++i){
+        if(obj->key[i]==key){
+            for(int j=i+1;j<obj->size;++j){
+                obj->key[j-1]=obj->key[j];
+                obj->value[j-1]=obj->value[j];
+            }
+            obj->size--;
+            return;
+        }
+    }
+}
+
+void myHashMapFree(MyHashMap* obj) {
+    free(obj->key);
+    free(obj->value);
+    free(obj);
+}
+
+/**
+ * Your MyHashMap struct will be instantiated and called as such:
+ * MyHashMap* obj = myHashMapCreate();
+ * myHashMapPut(obj, key, value);
+ 
+ * int param_2 = myHashMapGet(obj, key);
+ 
+ * myHashMapRemove(obj, key);
+ 
+ * myHashMapFree(obj);
+*/
