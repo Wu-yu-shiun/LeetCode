@@ -1,0 +1,15 @@
+//Javascript
+
+//hashmap:(key,value)=(number,index)
+const minimumCardPickup = (cards) => {
+    const hash={};
+    let result=Number.MAX_VALUE;
+    for(let i=0;i<cards.length;++i){
+        if(cards[i] in hash){
+            let len=i-hash[cards[i]]+1;
+            if(len<result) result=len;
+        }
+        hash[cards[i]]=i;
+    }
+    return result==Number.MAX_VALUE?-1:result;
+};
