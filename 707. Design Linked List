@@ -1,0 +1,110 @@
+//C lanuage
+
+// Your MyLinkedList struct will be instantiated and called as such:
+// MyLinkedList* obj = myLinkedListCreate();
+// int param_1 = myLinkedListGet(obj, index);
+// myLinkedListAddAtHead(obj, val);
+// myLinkedListAddAtTail(obj, val);
+// myLinkedListAddAtIndex(obj, index, val);
+// myLinkedListDeleteAtIndex(obj, index);
+// myLinkedListFree(obj);
+
+typedef struct {
+    int data;
+    struct MyLinkedlist* next;
+} MyLinkedList;
+
+MyLinkedList* myLinkedListCreate() {
+    MyLinkedList* first=(MyLinkedList*)malloc(sizeof(MyLinkedList));
+    first->next=NULL;
+    return first;
+}
+
+int myLinkedListGet(MyLinkedList* obj, int index) {
+    if(index<0) return -1;
+    
+    MyLinkedList* iter=obj->next;
+    while(iter && index>0){
+        iter=iter->next;
+        index--;
+    }
+    return iter?iter->data:-1;  
+}
+
+//create one new node
+MyLinkedList* createNode(int val){
+    MyLinkedList* node=(MyLinkedList*)malloc(sizeof(MyLinkedList));
+    node->data=val;
+    node->next=NULL;
+    return node;  
+}
+
+void myLinkedListAddAtHead(MyLinkedList* obj, int val) {
+    MyLinkedList* node=createNode(val);
+    node->next=obj->next;
+    obj->next=node;
+}
+
+void myLinkedListAddAtTail(MyLinkedList* obj, int val) {
+    MyLinkedList* node=createNode(val),* iter=obj;
+    while(iter->next){
+        iter=iter->next;
+    }
+    iter->next=node;
+}
+
+void myLinkedListAddAtIndex(MyLinkedList* obj, int index, int val) {
+    if(index==0) myLinkedListAddAtHead(obj, val);
+    else if(index>0){
+        MyLinkedList* iter=obj->next;
+        while(iter && index>1){  //遍歷至要插入位置的前一個MyLinkedList
+            iter=iter->next;
+            index--;
+        }
+        if(iter){
+            MyLinkedList* node=createNode(val);
+            node->next=iter->next;
+            iter->next=node;
+        }
+    }
+}
+
+void myLinkedListDeleteAtIndex(MyLinkedList* obj, int index) {
+    if(index==0){
+        MyLinkedList* temp=obj->next;
+        obj->next=temp->next;
+        free(temp);
+    }
+    else if(index>0){
+        MyLinkedList* iter=obj->next;
+        while(iter && index>1){   //遍歷至要插入位置的前一個MyLinkedList
+            iter=iter->next;
+            index--;
+        }
+        if(iter && iter->next){   //刪除iter->next
+            MyLinkedList* temp=iter->next;
+            if(temp->next) iter->next=temp->next;
+            else iter->next=NULL;
+            free(temp);
+        }
+    }
+}
+
+void myLinkedListFree(MyLinkedList* obj) {
+    MyLinkedList* iter=obj->next;
+    while(iter){
+        MyLinkedList* temp=iter;
+        iter=iter->next;
+        free(temp);
+    }
+}
+
+// ex                                        obj           0         1        2
+// MyLinkedList[]     {data,next} =>  {-1094795586,0}
+// addAtHead(1)       {data,next} =>  {-1094795586,752}  {1,0}
+// addAtTail(3)       {data,next} =>  {-1094795586,752}  {1,848}  {3,0} 
+// addAtIndex(1,2)    {data,next} =>  {-1094795586,752}  {1,944}  {2,848}   {3,0}
+// get(1):2
+// deleteAtIndex(1)   {data,next} =>  {-1094795586,752}  {1,848}  {3,0}
+// get(1):3
+// addAtIndex(2,5)    {data,next} =>  {-1094795586,880}  {1,976}  {3,1360}  {5,0}
