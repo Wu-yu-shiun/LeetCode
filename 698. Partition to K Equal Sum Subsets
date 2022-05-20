@@ -1,0 +1,84 @@
+//C++
+
+class Solution {
+public:
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        int sum=0;
+        sum=accumulate(nums.begin(),nums.end(),sum);
+        if(nums.size()<k || sum%k>0) return false;
+        
+        vector<bool>visited(nums.size(), false);
+        sort(begin(nums),end(nums),greater<int>());  //由大到小排列
+        return backtrack(nums,0,sum/k,k,0,visited);
+    }
+    
+    bool backtrack(vector<int>&nums,int cur,int goal,int k,int start,vector<bool>&visited){
+        //print(visited,k,cur);
+        if(k==1) return true; //找到全部
+        if(start>=nums.size()) return false;  //要找的數字超過範圍，此組合失敗，退回上層
+        if(cur==goal) return backtrack(nums,0,goal,k-1,0,visited); //找到一組，接著確認下組
+        
+        for(int i=start;i<nums.size();i++){
+            if(visited[i] || nums[i]+cur>goal) continue; //數字用過或加上後爆掉，即跳過
+            
+            //標記使用該數字，開始不斷往下找，一但發現第一個true，開始不斷回傳true至第一層
+            visited[i]=true;
+            if(backtrack(nums,cur+nums[i],goal,k,i+1,visited)) return true;
+            
+            visited[i]=false; //到達這裡表示該數字不在該組合，該數字改回false
+        }
+        
+        return false;  //到達這裡表示此組合找不到解，退回上一層
+    }
+};
+
+// ex1: nums=[10,15,1,3,5,11], k=3  => nums=[15,11,10,5,3,1], goal=15
+//
+// func in at line 10 then print...0 0 0 0 0 0 k=3,cur=0
+// func in at line 24 then print...1 0 0 0 0 0 k=3,cur=15
+// find next subset! func in at line 17 then print...1 0 0 0 0 0 k=2,cur=0
+// func in at line 24 then print...1 1 0 0 0 0 k=2,cur=11
+// func in at line 24 then print...1 1 0 0 1 0 k=2,cur=14
+// func in at line 24 then print...1 1 0 0 1 1 k=2,cur=15  
+// (此處放棄使用11+3+1，因1在最後一個數，line 15會優先line 19進行，line 15,19調換順序會TLE!)
+// func out with false at line 16
+// func out with false at line 29
+// func in at line 24 then print...1 1 0 0 0 1 k=2,cur=12
+// func out with false at line 16
+// func out with false at line 29
+// func in at line 24 then print...1 0 1 0 0 0 k=2,cur=10
+// func in at line 24 then print...1 0 1 1 0 0 k=2,cur=15
+// find next subset! func in at line 17 then print...1 0 1 1 0 0 k=1,cur=0
+// func out with true at line 15
+// func out with true at line 24
+// func out with true at line 24
+// func out with true at line 24
+// func out with true at line 10 => ans=true
+// ------------------------------------------------------------------
+// ex2: nums=[4,3,2,3,5,2,1], k=4  => nums=[5,4,3,3,2,2,1], goal=5
+//
+// func in at line 10 then print...0 0 0 0 0 0 0 k=4,cur=0
+// func in at line 24 then print...1 0 0 0 0 0 0 k=4,cur=5
+// find next subset! func in at line 17 then print...1 0 0 0 0 0 0 k=3,cur=0
+// func in at line 24 then print...1 1 0 0 0 0 0 k=3,cur=4
+// func in at line 24 then print...1 1 0 0 0 0 1 k=3,cur=5
+// func out with false at line 16
+// func out with false at line 29
+// func in at line 24 then print...1 0 1 0 0 0 0 k=3,cur=3
+// func in at line 24 then print...1 0 1 0 1 0 0 k=3,cur=5
+// find next subset! func in at line 17 then print...1 0 1 0 1 0 0 k=2,cur=0
+// func in at line 24 then print...1 1 1 0 1 0 0 k=2,cur=4
+// func in at line 24 then print...1 1 1 0 1 0 1 k=2,cur=5
+// func out with false at line 16
+// func out with false at line 29
+// func in at line 24 then print...1 0 1 1 1 0 0 k=2,cur=3
+// func in at line 24 then print...1 0 1 1 1 1 0 k=2,cur=5
+// find next subset! func in at line 17 then print...1 0 1 1 1 1 0 k=1,cur=0
+// func out with true at line 15
+// func out with true at line 24
+// func out with true at line 24
+// func out with true at line 24
+// func out with true at line 24
+// func out with true at line 24
+// func out with true at line 10 => ans=true
+
