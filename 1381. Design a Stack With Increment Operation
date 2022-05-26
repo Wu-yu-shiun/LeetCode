@@ -1,0 +1,49 @@
+//C language
+
+// Your CustomStack struct will be instantiated and called as such:
+// CustomStack* obj = customStackCreate(maxSize);
+// customStackPush(obj, x);
+// int param_2 = customStackPop(obj);
+// customStackIncrement(obj, k, val);
+// customStackFree(obj);
+
+typedef struct {
+    int size;
+    int length;
+    int* container;
+} CustomStack;
+
+CustomStack* customStackCreate(int maxSize) {
+    CustomStack* stack=(CustomStack*)malloc(sizeof(CustomStack));
+    stack->size=maxSize;
+    stack->length=0;
+    stack->container=(int*)malloc(sizeof(int)*maxSize);  //stack->container==NULL;
+    return stack;
+}
+
+void customStackPush(CustomStack* obj, int x) {
+    if(obj->length>=obj->size) return;
+    
+    obj->length++;
+    //obj->container=(int*)realloc(obj->container,sizeof(int)*obj->length);
+    obj->container[obj->length-1]=x;
+}
+
+int customStackPop(CustomStack* obj) {
+    if(obj->length<=0) return -1;
+    
+    int num=obj->container[obj->length-1];
+    obj->length--;
+    //obj->container=(int*)realloc(obj->container,sizeof(int)*obj->length);
+    return num;
+}
+
+void customStackIncrement(CustomStack* obj, int k, int val) {
+    if(k>=obj->length) k=obj->length;
+    for(int i=0;i<k;++i) obj->container[i]+=val;
+}
+
+void customStackFree(CustomStack* obj) {
+    free(obj->container);
+    free(obj);
+}
