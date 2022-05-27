@@ -1,0 +1,62 @@
+//C++
+
+// palindrome => 字正著念倒著唸都一樣
+// two word concat palindrone:
+// case1:當word中有""時，配上一個自帶palindrone的字即有兩組成立
+// case2:將每個字拆成左右兩邊的各種組合，比對之前建立好的map，若有相似，若另一邊是palindrone則成立
+
+class Solution {
+public:
+    bool isPalin(string str){
+        int start=0,end=str.size()-1;
+        while(start<end){
+            if(str[start++]!=str[end--]) return false;
+        }
+        return true;
+    }
+    
+    vector<vector<int>> palindromePairs(vector<string>& words) {
+        
+        //先用map存入reverse word和index
+        unordered_map<string,int> map;
+        for(int i=0;i<words.size();++i){
+            string temp=words[i];
+            reverse(temp.begin(),temp.end());
+            map[temp]=i;
+        }
+        vector<vector<int>> ans;
+        
+        //case1
+        if(map.find("")!=map.end()){
+            for(int i=0;i<words.size();++i){
+                if(i!=map[""] && isPalin(words[i])){
+                    ans.push_back({i,map[""]});
+                    ans.push_back({map[""],i});
+                } 
+            }    
+        }
+        map.erase("");
+        
+        //case2
+        for(int i=0;i<words.size();++i){
+            string left="", right=words[i];  //將字切為左右兩邊
+            int index=0;
+            while(right!=""){
+                left.push_back(words[i][index]);
+                right.erase(0,1);
+                //case2-1: 左邊找到map中出現過＋右邊自己是palindrone 
+                if(map.find(left)!=map.end() && i!=map[left] && isPalin(right)){
+                    ans.push_back({i,map[left]});
+                }
+                //case2-2: 左邊自己是palindrone+右邊找到map中出現過
+                if(map.find(right)!=map.end() && i!=map[right] && isPalin(left)){
+                    ans.push_back({map[right],i});
+                }
+                index++;
+            }
+        } 
+        
+        return ans;
+    }
+};
+
