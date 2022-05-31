@@ -1,0 +1,45 @@
+//C lamguage
+
+// 剛開始用brute force會TLE！方法如下
+// int result=left;
+// for(int i=left+1;i<=right;++i) result=result&i;
+// return result;
+// 問題1:這樣做當right=2147483647時，最後i++時會溢位導致無窮迴圈
+// 問題2:雖然改用去頭去尾的話沒有溢位問題，但依舊TLE
+
+// 精神：二進位時每次+1時，當數字進入下一個位數，前面位數都會經歷過0,1的切換，&後的結果也都會變成0
+//      所以只要檢查頭尾的二進位，也就是差異最大的兩個數
+
+// 方法一：左移運算子，從前面開始檢查，只要檢查到第一個不一樣後面全部都變成0
+// 左移運算子(<<)，每移一次變兩倍 ex：1=0001 => 1<<2=0010=2, 1<<4=1000=8
+// left和1<<i做&，即可得出left的第i位數是否為1，為1時digitLeft等於pow(2,i)，為0時digitLeft等於0;
+
+int rangeBitwiseAnd(int left, int right){
+    int result=0,digitLeft,digitRight;
+    for(int i=30;i>=0;--i){             //31個位元
+        digitLeft=left&(1<<i);          //位元運算，ex:left=5=110 => digitLeft=4->2->0
+        digitRight=right&(1<<i);        
+        if(digitLeft!=digitRight) break;
+        result+=digitLeft;
+    }
+    return result;
+}
+
+// 方法二：右移運算子，不斷右移，直到結果相同，這樣也等同於取到了前面那段一樣部分的值了
+//        但要記得在尾巴補剛剛又移次數個0回來(也就是左移回來)
+// 右移運算子(>>)，每移一次除2，也可以想成去掉尾巴  ex: 10=1010 => 10>>1=101=5, 10>>2=10=2
+
+int rangeBitwiseAnd(int left, int right){
+    int rightShift=0;
+    while(left!=right){
+        left=left>>1;
+        right=right>>1;
+        rightShift++;
+    }
+    return left<<rightShift;
+}
+
+// 方法二精簡成遞迴
+int rangeBitwiseAnd(int left, int right){
+    return (left==right)?left:(rangeBitwiseAnd(left>>1,right>>1)<<1);
+}
