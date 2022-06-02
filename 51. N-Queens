@@ -1,0 +1,84 @@
+//C++
+
+//方法一：backtracking 
+//一鏡到底，抓到解時(做到全部row都結束)將結果丟到答案區，並繼續進行，直到第一row的最後一個col也檢查完即結束
+//畫下Q則進入下一層，檢查到此col會有衝突則換下個col檢查，沒有col可以換時退回上一層並取消在該層畫上的Q
+
+class Solution {
+public:
+    vector<vector<string>> ans;                                 
+    
+    vector<vector<string>> solveNQueens(int n) {
+        vector<string> sol(n,string(n,'.'));        //初始先設成["....","....","....","...."]
+        int record[n];                              //記錄目前有在第幾row的哪個column放Q
+        
+        backtrack(sol,record,0,n);
+        return ans;
+    }
+
+    void backtrack(vector<string>& sol,int* record,int row,int n){ //vector在C++只有call by value/reference
+        //抓到解時(邊界條件)
+        if(row==n){
+            ans.push_back(sol);
+            return;
+        }
+        //依序對該row的每個col做檢查
+        for(int col=0;col<n;++col){
+            if(valid(record,row,col)){
+                record[row]=col;
+                sol[row][col]='Q';         //標記Q
+                backtrack(sol,record,row+1,n); //進入下一層，繼續找下一row的Q
+                sol[row][col]='.';         //回到上一層，取消此層標記的Q
+            }
+        }
+    }
+
+    bool valid(int* record,int row,int col){
+        for(int i=0;i<row;++i){ 
+            if(record[i]==col || abs(row-i)==abs(record[i]-col))  return false;
+            //record[i]==col => 該col已在前面某row有Q
+            //abs(row-i)==abs(record[i]-col) => 斜對角已經有Q
+            //拿此位置的row,col和上面每個row出現的Q的row,col做交互減法與絕對值，也就是利用斜對角有(+-n,+-n)的特性
+        }
+        return true;
+    }  
+};
+
+
+//------------------------------------------------------------------------------
+
+//方法二：backtracking + bit manipulation 別人的程式碼 尚未參透...
+
+class Solution {
+public:
+    
+	vector<vector<string>> ans;
+    int OK;
+
+	void backtrack(int rw, int ld, int rd, int index, vector<string>& record) {
+		if (rw==OK) {
+			ans.push_back(record);
+			return;
+		}
+        
+		int pos=OK&(~(rw|ld|rd));
+		while(pos){
+			int p=pos&-pos;
+			pos-=p;
+			int col=log2(p);
+			record[index][col]='Q';
+			backtrack(rw|p,(ld|p)<<1,(rd|p)>>1,index+1,record);
+			record[index][col]='.';
+		}
+	}
+
+    vector<vector<string>> solveNQueens(int n) {
+        OK = (1<<n)-1;
+        vector<string> record(n,string(n,'.'));
+        backtrack(0,0,0,0,record);
+        return ans;
+    }
+    
+};
+
+
