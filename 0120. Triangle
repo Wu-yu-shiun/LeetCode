@@ -1,0 +1,38 @@
+//C++
+
+//sol1:由下往上dp，選出下排兩個分支中的較小值，往上加，為上排做更新
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        for(int i=triangle.size()-2;i>=0;--i)  //從倒數第二排開始向上調整到第一排
+            for(int j=0;j<=i;++j)              //從該排的第一個調整到最後一個
+                triangle[i][j]+=min(triangle[i+1][j],triangle[i+1][j+1]);
+        return triangle[0][0];
+    }
+};
+
+//--------------------------------------------------------------------------------
+
+//sol2:由上往下dp，選出上面兩個分支中的較小值，往下加，為下排做更新
+//注意最左最右兩側，不用找較小值，因為只有一種路線，需額外做處理
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        if(triangle.size()==1) return triangle[0][0];
+        
+        int result=INT_MAX;
+        for(int i=1;i<triangle.size();++i){ //從第二排開始向下做調整到最後一排
+            for(int j=0;j<=i;++j){          //從該排的第一個調整到最後一個
+                if(j==0) triangle[i][j]+=triangle[i-1][j];
+                else if(j==i) triangle[i][j]+=triangle[i-1][j-1];
+                else triangle[i][j]+=min(triangle[i-1][j-1],triangle[i-1][j]);
+                
+                if(i==triangle.size()-1) result=min(result,triangle[i][j]);
+            }
+        }
+        return result;
+    }
+};
+
