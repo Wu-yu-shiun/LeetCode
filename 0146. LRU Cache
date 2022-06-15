@@ -1,0 +1,312 @@
+//C language
+
+// Your LRUCache struct will be instantiated and called as such:
+// LRUCache* obj = lRUCacheCreate(capacity);
+// int param_1 = lRUCacheGet(obj, key);
+// lRUCachePut(obj, key, value);
+// lRUCacheFree(obj);
+
+//sol1: priority由1~size，每次動作即時更新每個priority =>TLE!!!
+struct Pair{
+    int key;
+    int value;
+    int priority;
+};
+
+typedef struct {
+    struct Pair* pair;
+    int capacity;
+    int size;
+} LRUCache;
+
+
+LRUCache* lRUCacheCreate(int capacity) {
+    LRUCache* cache=(LRUCache*)malloc(sizeof(LRUCache));
+    cache->pair=(struct Pair*)malloc(sizeof(struct Pair)*capacity);
+    cache->capacity=capacity;
+    cache->size=0;
+    return cache;
+}
+
+int lRUCacheGet(LRUCache* obj, int key) {
+    for(int i=0;i<obj->size;++i){
+        if(obj->pair[i].key==key){ 
+            revisePriority(obj,i);
+            //print(obj);
+            return obj->pair[i].value;
+        }
+    }
+    //print(obj);
+    return -1;
+}
+
+void lRUCachePut(LRUCache* obj, int key, int value) {
+
+    //case1:key already exist
+    int minPriorityIndex;
+    for(int i=0;i<obj->size;++i){
+        if(obj->pair[i].key==key){
+            obj->pair[i].value=value;
+            revisePriority(obj,i);
+            //print(obj);
+            return;
+        }
+        if(obj->pair[i].priority==1) minPriorityIndex=i;
+    }
+    //case2:key not exist, cache still have space 
+    if(obj->size<obj->capacity){
+        obj->pair[obj->size].key=key;
+        obj->pair[obj->size].value=value;
+        obj->pair[obj->size].priority=obj->size+1;
+        obj->size++;
+    }
+    //case3:key not exist, replace one key
+    else{
+        obj->pair[minPriorityIndex].key=key;
+        obj->pair[minPriorityIndex].value=value;
+        revisePriority(obj,minPriorityIndex);  
+    }
+    //print(obj);
+}
+
+void revisePriority(LRUCache* obj,int index){
+    for(int i=0;i<obj->size;++i)
+            if(obj->pair[i].priority>obj->pair[index].priority)
+                obj->pair[i].priority--;
+    obj->pair[index].priority=obj->size; 
+}
+
+// void print(LRUCache* obj){
+//     printf("size:%d ",obj->size);
+//     for(int i=0;i<obj->size;++i){
+//         printf("[%d,%d,%d] ",obj->pair[i].key,obj->pair[i].value,obj->pair[i].priority);
+//     }
+//     printf("\n");
+// }
+
+void lRUCacheFree(LRUCache* obj) {
+    free(obj->pair);
+    free(obj);
+}
+
+//ex1                         [key,value,priority]
+//"LRUCache" [2]    =>        []
+//"put"      [1,1]  =>        [[1,1,1]]
+//"put"      [2,2]  =>        [[1,1,1],[2,2,2]]
+//"get"      [1]    => 1      [[1,1,2],[2,2,1]]
+//"put"      [3,3]  =>        [[1,1,1],[3,3,2]]  
+//"get"      [2]    => -1     [[1,1,1],[3,3,2]]
+//"put"      [4,4]  =>        [[4,4,2],[3,3,1]]
+//"get"      [1]    => -1     [[4,4,2],[3,3,1]]
+//"get"      [3]    => 3      [[4,4,2],[3,3,1]]
+//"get"      [4]    => 4      [[4,4,2],[3,3,1]]
+
+//------------------------------------------------------------------------
+
+//sol2: 用maxPriority當計數器，每次動作該priority不斷往上加 =>TLE!!!
+struct Pair{
+    int key;
+    int value;
+    int priority;
+};
+
+typedef struct {
+    struct Pair* pair;
+    int capacity;
+    int size;
+    int maxPriority; //計數器，當get或put發生時不斷往上累加
+} LRUCache;
+
+
+LRUCache* lRUCacheCreate(int capacity) {
+    LRUCache* cache=(LRUCache*)malloc(sizeof(LRUCache));
+    cache->pair=(struct Pair*)malloc(sizeof(struct Pair)*capacity);
+    cache->capacity=capacity;
+    cache->size=0;
+    cache->maxPriority=0;
+    return cache;
+}
+
+int lRUCacheGet(LRUCache* obj, int key) {
+    for(int i=0;i<obj->size;++i){
+        if(obj->pair[i].key==key){
+            obj->maxPriority++;
+            obj->pair[i].priority=obj->maxPriority;
+            return obj->pair[i].value;
+        }
+    }
+    return -1;
+}
+
+void lRUCachePut(LRUCache* obj, int key, int value) {
+
+    for(int i=0;i<obj->size;++i){
+        if(obj->pair[i].key==key){
+            obj->pair[i].value=value;
+            obj->maxPriority++;
+            obj->pair[i].priority=obj->maxPriority;
+            return;
+        }
+    }
+     
+    if(obj->size<obj->capacity){
+        obj->pair[obj->size].key=key;
+        obj->pair[obj->size].value=value;
+        obj->maxPriority++;
+        obj->pair[obj->size].priority=obj->maxPriority;
+        obj->size++;
+    }
+    else{
+        int minIndex=0;
+        for(int i=1;i<obj->size;++i)
+            if(obj->pair[i].priority<obj->pair[minIndex].priority)
+                minIndex=i;
+        obj->pair[minIndex].key=key;
+        obj->pair[minIndex].value=value;
+        obj->maxPriority++;
+        obj->pair[minIndex].priority=obj->maxPriority;  
+    }
+}
+
+void lRUCacheFree(LRUCache* obj) {
+    free(obj->pair);
+    free(obj);
+}
+
+//ex1                         [key,value,priority]
+//"LRUCache" [2]    =>        []
+//"put"      [1,1]  =>        [[1,1,1]]
+//"put"      [2,2]  =>        [[1,1,1],[2,2,2]]
+//"get"      [1]    => 1      [[1,1,3],[2,2,2]]
+//"put"      [3,3]  =>        [[1,1,3],[3,3,4]]  
+//"get"      [2]    => -1     [[1,1,3],[3,3,4]]
+//"put"      [4,4]  =>        [[4,4,5],[3,3,4]]
+//"get"      [1]    => -1     [[4,4,5],[3,3,4]]
+//"get"      [3]    => 3      [[4,4,5],[3,3,6]]
+//"get"      [4]    => 4      [[4,4,7],[3,3,6]]
+
+//------------------------------------------------------------------------
+
+//sol3:doubly linked list =>TLE!!! (需再搭配hash table才不會，用c++ unordered map實作較佳)
+
+typedef struct{
+    int key;
+    int value;
+    struct Node* prev;
+    struct Node* next;
+} Node;
+
+typedef struct {
+    int capacity;
+    int size;
+    Node* head;
+    Node* tail;
+} LRUCache;
+
+LRUCache* lRUCacheCreate(int capacity) {
+    LRUCache* cache=(LRUCache*)malloc(sizeof(LRUCache));
+    cache->capacity=capacity;
+    cache->size=0;
+    cache->head=cache->tail=NULL;
+    return cache;
+}
+
+int lRUCacheGet(LRUCache* obj, int key) {
+    Node* iter=obj->head;
+    while(iter){
+        if(iter->key==key){
+            //connect
+            shiftNodeToTail(obj,iter);
+            return iter->value;
+        }
+        iter=iter->next;
+    }
+    return -1;
+}
+
+void lRUCachePut(LRUCache* obj, int key, int value) {
+    //case1:key already exist
+    Node* iter=obj->head;
+    while(iter){
+        if(iter->key==key){
+            //update data
+            iter->value=value;
+            //connect
+            shiftNodeToTail(obj,iter);
+            return;
+        }
+        iter=iter->next;
+    }
+    
+    //case2:key not exist, cache still have space 
+    if(obj->size<obj->capacity){
+        //create node
+        Node* node=(Node*)malloc(sizeof(Node));
+        node->key=key;
+        node->value=value;
+        node->prev=node->next=NULL;
+        //connect
+        if(obj->size==0) obj->head=obj->tail=node;
+        else{
+            obj->tail->next=node;
+            node->prev=obj->tail;
+            obj->tail=node; 
+        }
+        //revise size
+        obj->size++;
+    }
+    //case3:key not exist, replace one key
+    else{
+        //update data
+        Node* temp=obj->head;
+        temp->key=key;
+        temp->value=value;
+        //connect
+        shiftNodeToTail(obj,temp);
+    }
+}
+
+void shiftNodeToTail(LRUCache* obj,Node* temp){
+    if(temp==obj->tail) return;
+    else if(temp==obj->head) obj->head=temp->next; 
+    else{
+        Node* temp1=temp->prev,* temp2=temp->next;
+        temp1->next=temp->next;
+        temp2->prev=temp->prev;
+    }
+    temp->next=NULL;
+    temp->prev=obj->tail;
+    obj->tail->next=temp;
+    obj->tail=temp;
+}
+
+// void print(LRUCache* obj){
+//     printf("print: ");
+//     Node* iter=obj->head;
+//     while(iter){
+//         printf("%d,%d ",iter->key,iter->value);
+//         iter=iter->next;
+//     }
+//     printf("\n");
+// }
+
+void lRUCacheFree(LRUCache* obj) {
+    Node* iter=obj->head;
+    while(iter){
+        Node* temp=iter;
+        iter=iter->next;
+        free(temp); 
+    }
+    free(obj);
+}
+
+//"LRUCache" [2]    =>        []
+//"put"      [2,1]  =>        [[2,1]]
+//"put"      [2,2]  =>        [[2,2]]
+//"get"      []     => 2      [[2,2]]
+//"put"      [3,3]  =>        [[1,1]->[3,3]]  
+//"get"      [2]    => -1     [[1,1]->[3,3]]
+//"put"      [4,4]  =>        [[3,3]->[4,4]]
+//"get"      [1]    => -1     [[3,3]->[4,4]]
+//"get"      [3]    => 3      [[4,4]->[3,3]]
+//"get"      [4]    => 4      [[3,3]->[4,4]]
