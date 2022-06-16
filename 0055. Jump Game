@@ -1,0 +1,26 @@
+//C language
+
+//sol1:從倒數第二個往回找，遇到0表示斷崖，若更往前的數字找到能跳過斷崖的，便能解除該斷崖
+
+bool canJump(int* nums, int numsSize){
+    int cliffIndex;
+    bool cliff=false;
+    for(int i=numsSize-2;i>=0;--i){
+        if(cliff && nums[i]>cliffIndex-i) cliff=false;
+
+        if(!cliff && nums[i]==0){
+            cliff=true;
+            cliffIndex=i;
+        }
+    }
+    return !cliff;
+}
+
+//sol2:由後向前dp，設置last為終點，當遇到能到達last的點，設置為新終點
+bool canJump(int* nums, int numsSize) {
+    int last=numsSize-1;
+    for(int i=numsSize-2;i>=0;--i){
+        if(i+nums[i]>=last) last=i;
+    }
+    return last==0;
+}
