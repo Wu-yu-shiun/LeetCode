@@ -16,6 +16,8 @@ bool canJump(int* nums, int numsSize){
     return !cliff;
 }
 
+//---------------------------------------------------------------------------
+
 //sol2:由後向前dp，設置last為終點，當遇到能到達last的點，設置為新終點
 bool canJump(int* nums, int numsSize) {
     int last=numsSize-1;
@@ -23,4 +25,19 @@ bool canJump(int* nums, int numsSize) {
         if(i+nums[i]>=last) last=i;
     }
     return last==0;
+}
+
+//---------------------------------------------------------------------------
+
+//sol3:由前向後dp，設置last為目前可以走到的最遠處(也就是目前所有位置能否到達的T/F界線)
+bool canJump(int* nums, int numsSize) {
+    int maxRange=0;
+    for(int i=0;i<numsSize;++i){
+        if(maxRange>=i){
+            int temp=i+nums[i];
+            if(temp>maxRange) maxRange=temp;
+        }
+        else break;
+    }
+    return maxRange>=numsSize-1;
 }
