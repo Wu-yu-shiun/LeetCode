@@ -1,0 +1,28 @@
+//C language
+
+//dp：用二維陣列存下[第一個字串抓到第i個字元,第二個字串抓到第j個字元]時的結果
+//紀錄間的關聯性 case1:兩組字串最新抓的字元相同=>答案為(兩組字串同時扣掉最新字的紀錄+1)
+//             case2:兩組字串最新抓的字元不同=>答案沿用(第一/二字串分別扣掉最新字的紀錄最大值)
+
+int max(int a,int b){
+    return a>b?a:b;
+}
+
+int longestCommonSubsequence(char* text1, char* text2){
+    int dp[strlen(text1)+1][strlen(text2)+1];
+    
+    //init
+    for(int i=0;i<strlen(text1)+1;++i)
+        for(int j=0;j<strlen(text2)+1;++j){
+            if(i==0||j==0) dp[i][j]=0; 
+        }
+        
+    //update
+    for(int i=1;i<=strlen(text1);++i){
+        for(int j=1;j<=strlen(text2);++j){
+            if(text1[i-1]==text2[j-1]) dp[i][j]=dp[i-1][j-1]+1;
+            else dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+        }
+    }
+    return dp[strlen(text1)][strlen(text2)]; 
+}
