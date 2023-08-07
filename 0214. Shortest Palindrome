@@ -1,0 +1,24 @@
+// python
+
+class Solution(object):
+    def shortestPalindrome(self, s):
+        # 以s="aacecaaa"為例
+        str = s+'#'+s[::-1] # str=aacecaaa.aaacecaa 
+        prefix = self.prefix_func(str) # 對str做KMP的prefix function
+        palin_num = prefix[len(str)-1] # 取表格最後一格資訊，得aacecaaa的前7個字元有回文
+        return s[palin_num:][::-1]+s # 取s第7個之後的字元做翻轉，塞到aacecaaa的前面即完成
+
+    def prefix_func(self, str):
+        k = 0
+        m = len(str)
+        pk = []
+
+        pk.append(0)
+        for i in range(2, m+1):
+            while k > 0 and str[k] != str[i-1]:
+                k = pk[k-1]
+            if str[k] == str[i-1]:
+                k += 1
+            pk.append(k)
+
+        return pk
