@@ -1,4 +1,4 @@
-//C lamguage
+//C language
 
 // 剛開始用brute force會TLE！方法如下
 // int result=left;
@@ -43,3 +43,14 @@ int rangeBitwiseAnd(int left, int right){
 int rangeBitwiseAnd(int left, int right){
     return (left==right)?left:(rangeBitwiseAnd(left>>1,right>>1)<<1);
 }
+
+//python
+
+class Solution(object):
+    def rangeBitwiseAnd(self, left, right):
+        shift = 0
+        while left < right:
+            left >>= 1
+            right >>= 1
+            shift += 1
+        return left << shift
