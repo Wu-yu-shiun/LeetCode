@@ -1,0 +1,17 @@
+// python
+
+class Solution(object):
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        dist=[sys.maxsize]*n
+        dist[src]=0
+        dist_new=dist[:]
+        for i in range(k+1): # k stops => relax k+1 times
+            # print(">>>>>",i)
+            for edge in flights:
+                # print(edge)
+                if dist_new[edge[1]]>dist[edge[0]]+edge[2]:
+                    dist_new[edge[1]]=dist[edge[0]]+edge[2]
+            dist=dist_new[:]
+            # for j in range(n):
+            #     print(dist[j])
+        return -1 if dist[dst]==sys.maxsize else dist[dst]
