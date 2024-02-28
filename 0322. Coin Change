@@ -1,0 +1,16 @@
+//python
+
+class Solution(object):
+    def coinChange(self, coins, amount):
+        s=[0]*(amount+1) # dp
+        for i in range(1,amount+1):
+            temp=float('inf')
+            for coin in coins:
+                if i-coin>=0 and s[i-coin]!=-1 and temp>s[i-coin]+1:
+                    temp=s[i-coin]+1
+            if temp==float('inf'):
+                s[i]=-1
+            else:
+                s[i]=temp
+            # print(s[i])
+        return s[amount]
