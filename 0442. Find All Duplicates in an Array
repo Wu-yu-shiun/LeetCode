@@ -1,0 +1,13 @@
+//python
+
+class Solution(object):
+    def findDuplicates(self, nums):
+        ans=[]
+        # 為了達到對過程作標記且又須constant space，借用index中值的正負號來做標記(題目有限制nums[i]在1~n間)
+        for item in nums:
+            x=abs(item)         # 原本的值可能被標記打亂，須取絕對值來確保其為要檢查的值
+            if nums[x-1]>0:     # 若遍歷的值為3,去nums[2]檢查其正負號
+                nums[x-1]*=-1
+            else:
+                ans.append(x)
+        return ans
