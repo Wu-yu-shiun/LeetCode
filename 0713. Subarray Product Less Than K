@@ -1,0 +1,22 @@
+//python
+
+class Solution(object):
+    def numSubarrayProductLessThanK(self, nums, k):
+        count=i=j=0
+        product=1
+        while i<len(nums):
+            while j<len(nums):
+                product=product*nums[j]
+                if product<k:
+                    j=j+1
+                else:
+                    product=product/nums[j]
+                    break
+            if j-i>0:
+                count=count+(j-i)
+                product=product/nums[i]
+                i=i+1
+            else: # 等下i會往前一格，此處針對j都沒往前，因此掉在i之前之狀況
+                i=j=j+1
+                product=1    
+        return count
