@@ -1,0 +1,19 @@
+//python
+
+class Solution(object):
+    def maxSubarrayLength(self, nums, k):
+        best=i=0
+        j=-1
+        table={}
+        while i<len(nums) and j<len(nums)-1:
+            j=j+1
+            table[nums[j]]=table.get(nums[j],0)+1  # dict中新增j的內容（取得該值，沒有該值則默認為0）
+            if table[nums[j]]>k:
+                table[nums[j]]=table[nums[j]]-1
+                j=j-1  # j退一步
+                table[nums[i]]=table[nums[i]]-1
+                i=i+1  # i進一步
+            else:
+                if j-i+1>best:
+                    best=j-i+1  
+        return best
