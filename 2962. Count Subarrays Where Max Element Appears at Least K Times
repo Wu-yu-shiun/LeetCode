@@ -1,0 +1,24 @@
+//python
+
+class Solution(object):
+    def countSubarrays(self, nums, k):
+        count=max_num=0
+        for item in nums:
+            max_num=max(max_num,item)
+
+        i=j=times=0
+        while i<len(nums):
+            while j<len(nums):
+                if nums[j] == max_num:
+                    times=times+1
+                if times == k:
+                    count=count+(len(nums)-j)
+                    if nums[i] == max_num:
+                        times=times-2
+                    else:
+                        times=times-1
+                    break
+                else:
+                    j=j+1
+            i=i+1     
+        return count
