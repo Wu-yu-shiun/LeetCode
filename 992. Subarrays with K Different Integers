@@ -1,0 +1,39 @@
+//python
+
+class Solution(object):
+    def subarraysWithKDistinct(self, nums, k):
+        table=lastok={}
+        j=count=0
+        nextj=-1
+        for i in range(len(nums)):
+            while j<len(nums):
+                table[nums[j]]=table.get(nums[j],0)+1
+                if len(table)<k:
+                    j=j+1
+                elif len(table)>k or (len(table)==k and j==len(nums)-1):
+                    if len(table)==k: # 例外處理：j走到底了，都依然符合len(table)==k，也需count++
+                        count=count+1
+                    if i+1>nextj: # 例外處理：當i往前j往後，出現i在j之右邊之狀況
+                        table={}
+                        j=i+1
+                        nextj=-1
+                    else:
+                        # j退到上輪第一次出現len=k時(記錄在nextj,lastok)
+                        table=lastok.copy()
+                        j=nextj
+                        nextj=-1
+                        table[nums[j]]=table[nums[j]]-1 #下輪的開始會再加入一次nums[j],故避免重複先扣掉
+                        if table[nums[j]]==0:
+                            del table[nums[j]]
+                        # i往前一格
+                        table[nums[i]]=table[nums[i]]-1 
+                        if table[nums[i]]==0:
+                            del table[nums[i]]
+                    break
+                else:
+                    count=count+1
+                    if nextj==-1: # 這輪的第一次ok，記錄其j值可成為下一論j的起點
+                        nextj=j
+                        lastok=table.copy()
+                    j=j+1
+        return count
