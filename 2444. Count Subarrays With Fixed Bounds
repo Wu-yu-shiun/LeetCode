@@ -1,0 +1,52 @@
+//python
+
+class Solution(object):
+    # 參考別人之快速算法，記錄最後一次出現minK,maxK的位置搭配數學，非sliding window
+    def countSubarrays(self, nums, minK, maxK):
+        count=0
+        illegal=lastmin=lastmax=-1 
+        for index,value in enumerate(nums):
+            if value<minK or value>maxK:
+                illegal=index
+            if value==minK:
+                lastmin=index
+            if value==maxK:
+                lastmax=index
+            count+=max(0,min(lastmin,lastmax)-illegal)
+            # print(illegal,lastmin,lastmax,count)
+
+        return count
+
+    # ------------------------------------------------------
+    # bad sol (time limit exceeded)
+    #
+    # def countSubarrays(self, nums, minK, maxK):
+    #     count=0
+    #     min_num=[0]*(len(nums)+1)
+    #     max_num=[0]*(len(nums)+1)
+    #     illegal_num=[0]*(len(nums)+1)
+    #     illegal_index=[]
+    #     illegal_index.append(0)
+
+    #     for i in range(1,len(nums)+1):
+    #         min_num[i]=min_num[i-1]
+    #         max_num[i]=max_num[i-1]
+    #         illegal_num[i]=illegal_num[i-1]
+    #         if nums[i-1]==minK:
+    #             min_num[i]=min_num[i]+1
+    #         if nums[i-1]==maxK:
+    #             max_num[i]=max_num[i]+1
+    #         if nums[i-1]<minK or nums[i-1]>maxK:
+    #             illegal_num[i]=illegal_num[i]+1
+    #             illegal_index.append(i)
+        
+    #     print(min_num,max_num,illegal_num,illegal_index)
+
+    #     for i in range(1,len(nums)+1):
+    #         for j in range(illegal_index[illegal_num[i]],i):
+    #             print(i,j) 
+    #             if min_num[i]-min_num[j]>0 and max_num[i]-max_num[j]>0:
+    #                 count=count+1
+    #                 print('...')
+    #     return count
+        
