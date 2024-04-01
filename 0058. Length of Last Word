@@ -1,0 +1,16 @@
+//python
+
+class Solution(object):
+    def lengthOfLastWord(self, s):
+        i=len(s)-1
+        count=0
+        get_word=False
+        while i>=0:
+            if s[i].isspace():
+                if get_word:
+                    break
+            else:
+                get_word=True
+                count=count+1
+            i=i-1
+        return count
