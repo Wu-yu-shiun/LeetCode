@@ -1,0 +1,32 @@
+//python
+
+class Solution(object):
+    def exist(self, board, word):
+        def search(board_use,now_i,now_j,now_num): # 用backtracking
+            if now_num==len(word): # 已集滿n步(找到解)
+                return True
+            if now_i<0 or now_i>=len(board) or now_j<0 or now_j>=len(board[0]):  # 超出board外
+                return False
+            
+            if board_use[now_i][now_j]==True: # 路已被走過
+                return False
+
+            if board[now_i][now_j] == word[now_num]:
+                board_use[now_i][now_j]=True
+                temp= ( search(board_use,now_i-1,now_j,now_num+1) or   # 上下左右任一條路ok即ok(backtracking精髓)
+                        search(board_use,now_i+1,now_j,now_num+1) or
+                        search(board_use,now_i,now_j-1,now_num+1) or
+                        search(board_use,now_i,now_j+1,now_num+1) )
+                if temp==False:
+                    board_use[now_i][now_j]=False
+                return temp
+            else:
+                return False
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                # 以各點當起點search一次
+                board_use=[[False]*len(board[0])for _ in range(len(board))] # 記錄格子是否已被使用過
+                if search(board_use,i,j,0)==True:
+                    return True
+        return False
