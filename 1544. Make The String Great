@@ -1,0 +1,28 @@
+//python
+
+class Solution(object):
+    def makeGood(self, s):
+        def check(str):
+            for i in range(0,len(str)-1):
+                if abs(ord(str[i])-ord(str[i+1]))==32:
+                    str=str[:i]+str[i+2:]
+                    break
+            return str
+
+        while True:
+            temp=check(s)
+            if s==temp:
+                break
+            else:
+                s=temp
+        return s
+
+        # 別人的作法(用stack)
+        # stack = []  
+        # for char in s:
+        #     if stack and abs(ord(char)-ord(stack[-1]))==32:  # stack[-1]為找stack的top
+        #         stack.pop()
+        #     else:
+        #         stack.append(char)
+
+        # return ''.join(stack) # 將stack中元素串成字串
