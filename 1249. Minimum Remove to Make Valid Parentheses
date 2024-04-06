@@ -1,0 +1,22 @@
+//python
+
+class Solution(object):
+    def minRemoveToMakeValid(self, s):
+        left_index=[]   # 記錄等等需要刪掉的左括號index
+        right_index=[]  # 記錄等等需要刪掉的右括號index
+        for i in range(len(s)):
+            if s[i]=='(':
+                left_index.append(i)
+            elif s[i]==')':
+                if len(left_index)>0:
+                    left_index.pop()
+                else:
+                    right_index.append(i)
+
+        # 將字串轉list來針對字串中某幾個index的字元做處理，最後再將list接回字串          
+        s_list=list(s) 
+        for index in left_index:
+            s_list[index] = ''
+        for index in right_index:
+            s_list[index] = ''
+        return ''.join(s_list)
