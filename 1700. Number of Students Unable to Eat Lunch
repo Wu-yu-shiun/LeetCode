@@ -1,0 +1,16 @@
+//python
+
+class Solution(object):
+    def countStudents(self, students, sandwiches):
+        i=count=0
+        while count<len(students) and students: #i繞一圈或students已為空，則結束
+            if students[i]==sandwiches[0]:
+                del students[i]
+                if i>=len(students): #刪掉的元素剛好在尾巴的話，需讓下個i回到頭
+                    i=0
+                del sandwiches[0]
+                count=0
+            else:
+                i=(i+1)%len(students)
+                count+=1
+        return len(students)
