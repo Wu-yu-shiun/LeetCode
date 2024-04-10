@@ -1,0 +1,24 @@
+//python
+
+class Solution(object):
+    def deckRevealedIncreasing(self, deck):
+        n=len(deck)
+        result=[0]*n
+        deck.sort() # 將數字由小到大排
+
+        result[0]=deck[0] # 第一格
+        if n==1:
+            return result
+
+        ptr=0        # 中間之規律：從上一格往後跳找到第二個0即是下一格
+        for i in range(1,n-1):
+            count=0  # 計數器找到的第二次0
+            while count<2:
+                ptr=(ptr+1)%n
+                if result[ptr]==0:
+                    count+=1  
+            result[ptr]=deck[i]
+        
+        result[result.index(0)]=deck[n-1] # 最後一格
+
+        return result
