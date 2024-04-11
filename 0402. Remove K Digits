@@ -1,0 +1,44 @@
+//python
+
+class Solution(object):
+    def removeKdigits(self, num, k):
+
+        # 自己解法(超時)
+        # digits=[int(digit) for digit in str(num)] # 從前1~k+1位中把最大的數中取最小的數當頭，視情況刪掉幾個數
+        # if len(digits)==k:
+        #     return "0"
+
+        # start_index=0
+        # end_index=k
+        # while k>0:
+        #     # print(digits,k,start_index,end_index)
+        #     min_digit=digits[start_index]
+        #     min_index=start_index
+        #     for i in range(start_index+1,end_index+1): # 若想從digit0到digit3中找最小，則遍歷1,2,3
+        #         if digits[i]<min_digit:
+        #             min_digit=digits[i]
+        #             min_index=i
+        #     digits=digits[:start_index]+digits[min_index:]
+        #     k-=(min_index-start_index)
+        #     start_index+=1
+        #     if start_index+k<len(digits): #end_index尚未超過
+        #         end_index=start_index+k
+        #     else:
+        #         digits=digits[:start_index]
+        #         break
+
+        # return str(int(''.join(map(str,digits)))) # 先將str改成int，可以去掉頭的0，最後再根據題目要求改回str
+
+        # 別人的解法(用stack)
+        digits=[int(digit) for digit in str(num)]
+        if len(digits)==k:
+            return "0"
+        stack=[]
+        for digit in digits:
+            while k>0 and stack and stack[-1]>digit: #看到stack頂端比現在的數字大就一直pop
+                stack.pop()
+                k-=1
+            stack.append(digit)
+        if k>0:
+            stack=stack[:-k] # 去掉最後面的n個元素
+        return str(int(''.join(map(str,stack))))
