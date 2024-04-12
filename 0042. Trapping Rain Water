@@ -1,0 +1,21 @@
+//python
+
+class Solution(object):
+    def trap(self, height):
+        # 參考別人two-pointer作法
+        result=0
+        i=0
+        left_peak=height[i]
+        j=len(height)-1
+        right_peak=height[j]
+
+        while i<j:
+            if left_peak<right_peak:
+                result+=(left_peak-height[i])  # 選擇了左右peak中較小者計算該位置的積水
+                i+=1
+                left_peak=max(left_peak,height[i])
+            else:
+                result+=(right_peak-height[j]) # 選擇了左右peak中較小者計算該位置的積水
+                j-=1
+                right_peak=max(right_peak,height[j])         
+        return result
