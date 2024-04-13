@@ -2,20 +2,48 @@
 
 class Solution(object):
     def trap(self, height):
-        # 參考別人two-pointer作法
+
+        # 參考別人2-pointer作法
+        # result=0
+        # i=0
+        # left_peak=height[i]
+        # j=len(height)-1
+        # right_peak=height[j]
+
+        # while i<j:
+        #     if left_peak<right_peak:
+        #         result+=(left_peak-height[i])  # 選擇了左右peak中較小者計算該位置的積水
+        #         i+=1
+        #         left_peak=max(left_peak,height[i])
+        #     else:
+        #         result+=(right_peak-height[j]) # 選擇了左右peak中較小者計算該位置的積水
+        #         j-=1
+        #         right_peak=max(right_peak,height[j])         
+        # return result
+
+        # 2-pointer(用新面積減舊面積)
+        if len(height)==1:
+            return 0
+
         result=0
         i=0
         left_peak=height[i]
         j=len(height)-1
         right_peak=height[j]
 
-        while i<j:
-            if left_peak<right_peak:
-                result+=(left_peak-height[i])  # 選擇了左右peak中較小者計算該位置的積水
+        old_area=0
+        new_area=height[i]+height[j]
+        for area in height:
+            old_area+=area
+        
+        while i<j-1:
+            if left_peak<=right_peak:
                 i+=1
                 left_peak=max(left_peak,height[i])
+                new_area+=left_peak
             else:
-                result+=(right_peak-height[j]) # 選擇了左右peak中較小者計算該位置的積水
                 j-=1
-                right_peak=max(right_peak,height[j])         
-        return result
+                right_peak=max(right_peak,height[j])
+                new_area+=right_peak
+
+        return new_area-old_area
