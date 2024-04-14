@@ -1,0 +1,19 @@
+//python
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def sumOfLeftLeaves(self, root):
+        if not root:
+            return 0
+        left=self.sumOfLeftLeaves(root.left)
+        right=self.sumOfLeftLeaves(root.right)
+        if root.left and (not root.left.left) and (not root.left.right): # root之左子點為樹葉
+            return root.left.val+left+right
+        else:
+            return left+right
