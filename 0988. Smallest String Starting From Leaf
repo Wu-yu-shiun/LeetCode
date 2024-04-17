@@ -1,0 +1,30 @@
+//python
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def smallestFromLeaf(self, root):
+        def dfs(node, now_str, min_str):
+            if not node:
+                return min_str
+            if not node.left and not node.right:       # 已到leaf
+                min_str=min(min_str,now_str[::-1])     # 判斷是否須更新min_str(倒過來比大小)
+                return min_str
+            if node.left:
+                now_str+=chr(ord('a')+node.left.val)   # 加上下一層(0->a,1->b...)的新字元，來到下一層
+                min_str=dfs(node.left,now_str,min_str) # 回傳該層的最小string給上一層使用
+                now_str=now_str[:-1]                   # 扣掉該層的字元，回到上一層
+            if node.right:
+                now_str+=chr(ord('a')+node.right.val)
+                min_str=dfs(node.right,now_str,min_str)
+                now_str=now_str[:-1]
+            return min_str
+
+        now_str=chr(ord('a')+root.val)
+        min_str="€"  # 比a~z還大的字元
+        return dfs(root,now_str,min_str)
