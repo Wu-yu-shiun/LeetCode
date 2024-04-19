@@ -23,3 +23,27 @@ int numIslands(char** grid, int gridSize, int* gridColSize){
     }
     return result;
 }
+
+//python
+
+class Solution(object):
+    def numIslands(self, grid):
+        def dfs(grid, now_i, now_j):
+            grid[now_i][now_j]="0"
+            if now_i-1>=0 and grid[now_i-1][now_j]=="1": # 可往上走
+                dfs(grid,now_i-1,now_j)
+            if now_i+1<=len(grid)-1 and grid[now_i+1][now_j]=="1": # 可往下走
+                dfs(grid,now_i+1,now_j)
+            if now_j-1>=0 and grid[now_i][now_j-1]=="1": # 可往左走
+                dfs(grid,now_i,now_j-1)
+            if now_j+1<=len(grid[0])-1 and grid[now_i][now_j+1]=="1": # 可往右走
+                dfs(grid,now_i,now_j+1)
+            return
+
+        result=0
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j]=="1":
+                    result+=1
+                    dfs(grid,i,j) # 把該點可以通到的所以點走完(同時1->0)
+        return result
