@@ -1,0 +1,23 @@
+//python
+
+class Solution(object):
+    def findFarmland(self, land):
+        def find_rect(land,start_i,start_j):
+            end_i=start_i
+            end_j=start_j
+            while end_i+1<len(land) and land[end_i+1][start_j]==1: #往右擴展
+                end_i+=1
+            while end_j+1<len(land[0]) and land[start_i][end_j+1]==1: #往右擴展
+                end_j+=1
+            for i in range(start_i,end_i+1): # 將找到的長方形1->0避免下次重複找
+                for j in range(start_j,end_j+1):
+                    land[i][j]=0
+            return [start_i,start_j,end_i,end_j] 
+            
+
+        result=[]   
+        for i in range(len(land)):
+            for j in range(len(land[0])):
+                if land[i][j]==1:
+                    result.append(find_rect(land,i,j))
+        return result
