@@ -1,0 +1,42 @@
+//python
+
+class Solution(object):
+    def validPath(self, n, edges, source, destination):
+        def dfs(current):
+            visited[current]=True
+            for vertice in adjacency_list[current]:
+                if visited[vertice] is False:
+                    dfs(vertice)
+
+        adjacency_list=[[] for _ in range(n)] # 先用adjacency list存下每點的鄰點，否則直接用edges找邊會超時
+        for edge in edges:
+            adjacency_list[edge[0]].append(edge[1])  
+            adjacency_list[edge[1]].append(edge[0])
+        visited=[False]*n
+
+        dfs(source)
+        return visited[destination]
+
+//--------------------------------------------------------------------------------------------------------------
+
+class Solution(object):
+    def validPath(self, n, edges, source, destination):
+        def dfs(current):
+            visited.add(current) # 拜訪完之後若退回去也不用移除，因為不用再考慮走到此點之情況
+            if current==destination:
+                return True
+            for vertice in adjacency_list[current]:
+                if vertice not in visited:
+                    result=dfs(vertice)
+                    if result is True:
+                        return True
+            return False
+
+
+        adjacency_list=[[] for _ in range(n)] # 先用adjacency list存下每點的鄰點，否則直接用edges找邊會超時
+        for edge in edges:
+            adjacency_list[edge[0]].append(edge[1])  
+            adjacency_list[edge[1]].append(edge[0])
+        visited=set()
+
+        return dfs(source)
