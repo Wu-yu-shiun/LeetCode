@@ -1,0 +1,16 @@
+//python
+
+class Solution(object):
+    def tribonacci(self, n):
+        if n==0:
+            return 0
+        if n==1:
+            return 1
+        if n==2:
+            return 1
+
+        table=[0]*(n+1) # dp
+        table[0],table[1],table[2]=0,1,1
+        for i in range(3,n+1):
+            table[i]=table[i-3]+table[i-2]+table[i-1]
+        return table[n]
