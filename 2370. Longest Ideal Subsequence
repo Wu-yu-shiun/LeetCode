@@ -1,0 +1,15 @@
+//python
+
+class Solution(object):
+    def longestIdealString(self, s, k):
+        table=[0]*26 # dp
+        result=1
+        for i in range(len(s)):
+            num=ord(s[i])-ord('a')       # a->0,b->1,...
+            left=max(num-k,0)
+            right=min(num+k,25)
+            table[num]=max(table[left:right+1])+1 # 從alphabet table中框出左右有相關且已累積的連續字母數量
+            result=max(result,table[num])
+            # print(table)
+            # print(result)
+        return result
