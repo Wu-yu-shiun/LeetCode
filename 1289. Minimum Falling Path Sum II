@@ -1,0 +1,47 @@
+// python
+
+class Solution(object):
+    def minFallingPathSum(self, grid):
+
+        # 可以過，但慢
+        # def min_without_that_column(i,j,n):
+        #     min_value=float('inf')
+        #     for k in range(n):
+        #         if k!=j:
+        #             min_value=min(min_value,grid[i-1][k])
+        #     return min_value
+
+        # n=len(grid)
+        # result=float('inf')
+        # for i in range(n):
+        #     for j in range(n):
+        #         if i!=0: # 第一排不用更新
+        #             grid[i][j]+=min_without_that_column(i,j,n)
+        #         if i==n-1: # 最後一排中找最小值為解
+        #             result=min(result,grid[i][j])
+        # return result
+
+        # optimized sol
+        def find_two_min(i,n):
+            min1=grid[i][0] if grid[i][0]<=grid[i][1] else grid[i][1]
+            j1=0 if grid[i][0]<=grid[i][1] else 1
+            min2=grid[i][1] if grid[i][0]<=grid[i][1] else grid[i][0]
+            for j in range(2,n):
+                if grid[i][j]<min1:
+                    min2=min1
+                    min1=grid[i][j]
+                    j1=j
+                elif grid[i][j]<min2:
+                    min2=grid[i][j]
+            return min1,j1,min2
+
+        n=len(grid)
+        if n==1:                                        # 防呆(1*1的grid找不到min2)
+            return grid[0][0] 
+        min1=min2=j1=0
+        for i in range(n):
+            for j in range(n):
+                if i!=0:                                # 第一排不用更新
+                    grid[i][j]+=min1 if j!=j1 else min2 # dp:拿著上排的最小值來更新元素(若最小值在同一排就用第二小)
+            min1,j1,min2=find_two_min(i,n)              # 取得該排最小兩數的值，以及最小數的column位置
+        return min1
