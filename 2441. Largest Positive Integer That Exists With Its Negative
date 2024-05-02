@@ -1,0 +1,15 @@
+//python
+
+class Solution(object):
+    def findMaxK(self, nums):
+        sorted_nums=sorted(nums) # 排序後用two-pointer從頭尾往內找
+        i,j=0,len(sorted_nums)-1
+        while True:
+            if i>=j or sorted_nums[i]>0 or sorted_nums[j]<0:
+                return -1
+            if sorted_nums[i]*-1>sorted_nums[j]:
+                i+=1
+            elif sorted_nums[i]*-1<sorted_nums[j]:
+                j-=1
+            elif sorted_nums[i]*-1==sorted_nums[j]:
+                return sorted_nums[j]
