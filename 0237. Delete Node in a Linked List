@@ -1,0 +1,13 @@
+//python
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def deleteNode(self, node):
+        # 不用特地去找node的前個點做刪除，直接將此點的值改成下個點到值並刪除下個點
+        node.val=node.next.val
+        node.next=node.next.next
