@@ -1,0 +1,21 @@
+//python
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution(object):
+    def removeNodes(self, head):
+        stack=[] # 用stack，若p.val<stack頂端的值，就一直pop
+        p=head
+        while p:
+            while stack and stack[-1].val<p.val:
+                stack.pop()
+            stack.append(p)
+            p=p.next
+
+        head=stack[0] # 再用linked list把node接起來
+        for i in range(len(stack)):
+            stack[i].next=stack[i+1] if i!=len(stack)-1 else None
+        return head
