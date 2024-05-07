@@ -1,0 +1,22 @@
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution(object):
+    def doubleIt(self, head):
+        p=head
+        num=0
+        while p:
+            num=num*10+p.val
+            p=p.next
+        num*=2 
+        num_array=[int(char) for char in str(num)]     # 將number轉為整數陣列方便填入各個node的val
+
+        p=head
+        for i in range(len(num_array)):
+            p.val=num_array[i]
+            if p.next is None and i!=len(num_array)-1: # 當並非輪到最後一個數字但已沒有p.next時，需指向一個新node
+                 p.next=ListNode() 
+            p=p.next
+        return head
