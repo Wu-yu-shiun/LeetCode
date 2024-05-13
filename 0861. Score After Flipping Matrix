@@ -1,0 +1,29 @@
+//python
+
+class Solution(object):
+    def matrixScore(self, grid):
+        m,n=len(grid),len(grid[0])
+        for i in range(m): # 把最左為0的row做0變1,1變0
+            if grid[i][0]==0:
+                for j in range(n):
+                    grid[i][j]=1 if grid[i][j]==0 else 0 
+        
+        result=0
+        for i in range(m): # 計算row換完後的結果
+            weight=pow(2,n-1)
+            for j in range(n):
+                if grid[i][j]==1:
+                    result+=weight 
+                weight/=2
+
+        weight=pow(2,n-1)
+        for j in range(n): # 計算每個column的1是否超過一半，若沒有就做0變1,1變0(但這次直接對result做加就好)  
+            count=0
+            for i in range(m):
+                if grid[i][j]==1:
+                    count+=1
+            if m-2*count>0:
+                result+=(m-2*count)*weight
+            weight/=2
+
+        return result
