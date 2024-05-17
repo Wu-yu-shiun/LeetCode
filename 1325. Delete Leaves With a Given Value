@@ -1,0 +1,26 @@
+//python
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def removeLeafNodes(self, root, target):
+        def dfs(node):
+            if not node:
+                return
+            if node.left:
+                dfs(node.left)
+                if not node.left.left and not node.left.right and node.left.val==target: # 左邊是leaf且值為target
+                    node.left=None
+            if node.right:
+                dfs(node.right)
+                if not node.right.left and not node.right.right and node.right.val==target: # 右邊是leaf且值為target
+                    node.right=None
+            return
+
+        dfs(root)
+        # 針對剩下root之狀況額外處理(上面的dfs只有辦法刪node.left和node.right)
+        return None if not root.left and not root.right and root.val==target else root 
