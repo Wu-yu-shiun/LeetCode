@@ -1,0 +1,12 @@
+//python
+
+class Solution(object):
+    def subsets(self, nums):
+        def backtrack(start,subset):
+            result.append(subset)
+            for i in range(start,len(nums)):
+                backtrack(i+1,subset+[nums[i]])
+
+        result=[]
+        backtrack(0,[])
+        return result
