@@ -9,12 +9,12 @@ class Solution(object):
                 return False
 
         def backtrack(start_index, cur_partition):
-            if start_index==len(s): # 已檢查(切割)完畢
+            if start_index==len(s):                                 # 已檢查(切割)完畢
                 result.append(cur_partition)
-                return
-            for end_index in range(start_index,len(s)): # 討論該段之尾巴在哪
-                if check_palin(s[start_index:end_index+1]):   # 若該段是palin，才需對剩餘部分做進一步檢查
-                    backtrack(end_index+1,cur_partition+[s[start_index:end_index+1]])
+            else:                                                   # 尚未檢查(切割)完畢
+                for end_index in range(start_index,len(s)):         # 討論該段之尾巴在哪
+                    if check_palin(s[start_index:end_index+1]):     # 若該段是palin，才需對剩餘部分做進一步檢查
+                        backtrack(end_index+1,cur_partition+[s[start_index:end_index+1]])
 
         result=[]
         backtrack(0,[])
