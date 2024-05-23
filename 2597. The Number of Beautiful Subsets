@@ -1,0 +1,20 @@
+//python
+
+class Solution(object):
+    def beautifulSubsets(self, nums, k):
+        def check_new_num(subset,new_num):
+            for num in subset:
+                if abs(num-new_num)==k:
+                    return False
+            return True
+
+        def backtrack(start_index,subset):
+            if start_index==len(nums):                                  # 已將index檢查到底
+                return 0
+            result=0
+            for index in range(start_index,len(nums)):                  # 討論新加入的元素的各種index
+                if not subset or check_new_num(subset,nums[index]):     # subset為空時沒辦法跑check_new_num
+                    result+=(1+backtrack(index+1,subset+[nums[index]])) # beautiful subsets+1，且繼續拿加入該元素後的subset往後檢查
+            return result
+
+        return backtrack(0,[]) if len(nums)!=1 else 1
