@@ -2,7 +2,7 @@
 
 class Solution(object):
     def beautifulSubsets(self, nums, k):
-        def check_new_num(subset,new_num):
+        def check_new_num(subset,new_num):                              # 檢查是否可放新元素
             for num in subset:
                 if abs(num-new_num)==k:
                     return False
