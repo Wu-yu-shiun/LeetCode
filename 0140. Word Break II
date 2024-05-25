@@ -1,0 +1,15 @@
+//python
+
+class Solution(object):
+    def wordBreak(self, s, wordDict):
+        def backtrack(start_index,cur_partition):
+            if start_index==len(s):
+                result.append(" ".join(cur_partition))
+            else:
+                for end_index in range(start_index,len(s)):
+                    if s[start_index:end_index+1] in wordDict:
+                        backtrack(end_index+1,cur_partition+[s[start_index:end_index+1]])
+
+        result=[]
+        backtrack(0,[])
+        return result  
