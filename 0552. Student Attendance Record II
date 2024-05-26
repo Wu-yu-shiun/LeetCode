@@ -1,0 +1,23 @@
+//python
+
+# 用排列組合導出公式DP(但還是Time Limit Exceeded)
+class Solution(object):
+    def checkRecord(self, n):
+        a=[0]*5  # a陣列裝最近五個存在0個A的組合數
+        b=[0]*5  # b陣列裝最近五個存在1個A的組合數
+        a[0],a[1],a[2],a[3],a[4]=1,2,4,7,13
+        b[0],b[1],b[2],b[3],b[4]=0,1,4,12,30
+        if n<=4:
+            return a[n]+b[n]
+
+        for i in range(5,n+1):
+                temp_a=a[4]+2*a[2]+a[1]+a[0]
+                temp_b=b[4]+a[4]+3*a[2]+2*b[2]+2*a[1]+b[1]+2*a[0]+b[0]
+                # 將五對數字皆往前挪一格
+                a[0],b[0]=a[1],b[1]
+                a[1],b[1]=a[2],b[2]
+                a[2],b[2]=a[3],b[3]
+                a[3],b[3]=a[4],b[4]
+                a[4],b[4]=temp_a,temp_b
+
+        return (a[4]+b[4])%(pow(10,9)+7)
