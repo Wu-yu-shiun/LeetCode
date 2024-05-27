@@ -1,0 +1,22 @@
+//python
+
+class Solution(object):
+    def specialArray(self, nums):
+        def binary_search(target):    # 找陣列中有多少大於target的值
+            left,right=0,len(nums)-1
+            index=-1
+            while left<=right:
+                mid=(left+right)/2
+                if nums[mid]>=target: # 往左找
+                    index=mid
+                    right=mid-1  
+                else:                 # 往右找
+                    left=mid+1
+            return index              # 輸出從第index開始的值皆大於target
+
+        nums=sorted(nums)
+        result=-1
+        for i in range(len(nums)+1):
+            if len(nums)-binary_search(i)==i:
+                result=i
+        return result
