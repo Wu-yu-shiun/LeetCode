@@ -1,0 +1,13 @@
+//python
+
+class Solution(object):
+    def numSteps(self, s):
+        def count(num,step):
+            if num==1:
+                return step
+            if num%2==1:
+                return count(num+1,step+1)
+            else:
+                return count(num/2,step+1)
+        
+        return count(int(s,2),0)
