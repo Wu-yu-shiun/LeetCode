@@ -1,0 +1,15 @@
+//python
+
+class Solution(object):
+    def longestPalindrome(self, s):
+        pairs={}
+        for char in s:                                 # 用dict的key,value蒐集每種字元出現幾次
+            if char in pairs:
+                pairs[char]+=1
+            else:
+                pairs[char]=1
+
+        result=0
+        for key in pairs:
+            result+=(pairs[key]//2)*2                   # 共有幾對一樣的數*2
+        return result if result==len(s) else result+1   # 可以再多容納一個數因palin中間不用成對
