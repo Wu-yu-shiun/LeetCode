@@ -1,0 +1,23 @@
+//python
+
+class Solution(object):
+    def commonChars(self, words):
+        def char_to_number(char):       # a->0,b->1...
+            return ord(char)-ord('a')
+        def number_to_char(number):     # 0->a,1->b...
+            return chr(number+ord('a'))
+
+        table=[[0]*26 for _ in range(len(words))]
+        for i in range(len(words)):
+            for char in words[i]:
+                table[i][char_to_number(char)]+=1
+        
+        result=[]
+        for num in range(26):
+            tmp=float('inf')
+            for i in range(len(words)):
+                tmp=min(tmp,table[i][num])
+            if tmp>0:
+                for k in range(tmp):
+                    result.append(number_to_char(num))
+        return result
