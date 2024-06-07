@@ -1,0 +1,10 @@
+//python
+
+class Solution(object):
+    def replaceWords(self, dictionary, sentence):
+        words=sentence.split()
+        for i in range(len(words)):
+            for root in dictionary:
+                if len(root)<len(words[i]) and words[i][0:len(root)]==root:
+                    words[i]=root
+        return ' '.join(words)
