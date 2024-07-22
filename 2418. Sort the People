@@ -1,0 +1,8 @@
+// python
+
+class Solution(object):
+    def sortPeople(self, names, heights):
+        zipped=zip(names,heights) # 將對應位置的元素打包成元組list
+        sorted_zipped=sorted(zipped,key=lambda k:k[1],reverse=True)  # 用元組的第一個元素做排序
+        sorted_names,sorted_heights=zip(*sorted_zipped)  # 元組list解壓縮回兩個list
+        return sorted_names
